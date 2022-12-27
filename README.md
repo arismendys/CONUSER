@@ -20,3 +20,6 @@ y colocar el nombre del programa.</p>
 <li><b>RDP#:</b>Van del RDP1 hasta el RDP9. Cada una almacenará el nombre del servidor que le otorgues.</li>
 </ul>
 </p>
+<p><b>UPDATE 27.12.22:</b> El programa ahora cuanta con una versión gráfica realizada en PowerShell Studio.
+
+Para esta nueva versión en el arreglo <i>$servidores = @("NOMBRESERVIDOR", "NOMBRESERVIDOR", "NOMBRESERVIDOR", "NOMBRESERVIDOR", "NOMBRESERVIDOR", "NOMBRESERVIDOR", "NOMBRESERVIDOR", "NOMBRESERVIDOR")</i>, solo tendrán que sustituir <b>NOMBRESERVIDOR</b> por el nombre de cada uno de sus servidores. Deben tener pendiente que esta actualización solo está diseñada para 8 servidores.<p>
