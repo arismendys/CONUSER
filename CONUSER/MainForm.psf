@@ -1025,7 +1025,7 @@ tx8OqQwsU36/J/Z9YX/eEPj3xdT/lR2G72wl/KkMv+n4g1LEt+R3i73fbyyHzSrzf5f4/hdqpt8X
 R3/2i9wvafyd/flf5/1BUWMU+p3M/RsJfvnY/fL/AjxNNqA1XQAA</Form>
   <Code><![CDATA[
 $formConsultarUsuario_Load={
-	$progressbar.Maximum = 96
+	$progressbar.Maximum = 80
 	$Usuario.Focus()
 }
 
@@ -1047,7 +1047,7 @@ $Buscar_Click={
 	{
 		foreach ($servidor in $servidores)
 		{
-			$progressbar.Value += 12
+			$progressbar.Value += 10
 			$result = query session $Usuario.Text /SERVER:$servidor | select -skip 1 | %{ $_.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries) }
 			If ($result)
 			{
@@ -1055,19 +1055,28 @@ $Buscar_Click={
 				$msg = "¿Desea cerrar la sesión del usuario (" + $Usuario.Text + ") en el servidor: $servidor."
 				if ([System.Windows.Forms.MessageBox]::Show($msg, '', 'YesNo', 'Question') -eq 'Yes')
 				{
-					logoff $Usuario.Text /server:$servidor
-					[System.Windows.Forms.MessageBox]::Show("La sesión del usuario ("+$Usuario.Text+") en el servidor $servidor se ha cerrado con exito.","", 'OK' , 'Exclamation')
+					try
+					{
+						logoff $Usuario.Text /server:$servidor
+						[System.Windows.Forms.MessageBox]::Show("La sesión del usuario ("+$Usuario.Text+") en el servidor $servidor se ha cerrado con exito.","", 'OK' , 'Exclamation')
+					}
+					catch
+					{
+						[System.Windows.Forms.MessageBox]::Show("Error de ejecución: $($_.exception.message)","", 'OK', 'Error')
+					}
 				}
 			}
 			else
 			{
-				[System.Windows.Forms.MessageBox]::Show("No se pudo encontrar al usuario (" + $Usuario.Text + ") en el servidor: $servidor", "", 'OK', 'Exclamation')
+				$noencontrado = $noencontrado + $Servidor
+				#[System.Windows.Forms.MessageBox]::Show("No se pudo encontrar al usuario (" + $Usuario.Text + ") en el servidor: $servidor", "", 'OK', 'Exclamation')
 			}
 		}
-		if ($progressbar.Value -eq 96)
+		if ($progressbar.Value -eq 80)
 		{
-			[System.Windows.Forms.MessageBox]::Show("El sistema termino de buscar al usuario (" + $Usuario.Text + ") en los servidores: 
+			#[System.Windows.Forms.MessageBox]::Show("El sistema termino de buscar al usuario (" + $Usuario.Text + ") en los servidores: 
 $servidores", "", 'OK', 'Information')
+			[System.Windows.Forms.MessageBox]::Show("El sistema termino de buscar al usuario (" + $Usuario.Text + ") en todos los servidores, y no se pudo encontrar al usuario en los servidores: $noencontrado", "", 'OK', 'Exclamation')
 			$Usuario.Clear()
 			$progressbar.Value = 0
 			$Usuario.Focus()
@@ -1075,13 +1084,7 @@ $servidores", "", 'OK', 'Information')
 		
 	}
 	
-	#	try
-	#	{
-	#	}
-	#	catch
-	#	{
-	#		[System.Windows.Forms.MessageBox]::Show("Error de ejecución: $($_.exception.message)","", 'OK', 'Error')
-	#	}
+
 }
 
 ]]></Code>
